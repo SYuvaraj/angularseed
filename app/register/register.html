@@ -14,7 +14,7 @@
  
 </head>
  
-<body>
+<body ng-controller="RegisterCtrl">
  
     <div class="container">
         <div class="jumbotron" style="padding-bottom:0px;">
@@ -32,10 +32,11 @@
                 <input type="password" name="password" class="form-control" ng-model="user.password" ng-minlength="8">
                 <p class="help-block" ng-show="regForm.$error.minlength">Min password length is 8 characters.</p>
             </div>
+            <p style="color:red;" ng-show="regError">{{regErrorMessage}}</p>
             <label class="checkbox">
                 <a href="#/home"> Sign In</a>
             </label>
-             <button type="button" class="btn btn-lg btn-primary btn-block" ng-disabled="!user.email || !user.password">Register</button>
+             <button type="button" ng-click="signUp();" class="btn btn-lg btn-primary btn-block" ng-disabled="!user.email || !user.password">Register</button>
         </form>
     </div>
 </body>
