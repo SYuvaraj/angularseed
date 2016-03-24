@@ -18,6 +18,7 @@ angular.module('myApp.register', ['ngRoute','firebase'])
 	$scope.login=login;
 
 	 $scope.signUp = function(){
+	 	login.loading = true;
 	 	if ( !$scope.regForm.$invalid ){
 	 		console.log("Valid forms submission");
 	 		var email = $scope.user.email;
@@ -25,7 +26,7 @@ angular.module('myApp.register', ['ngRoute','firebase'])
 	 		if ( email && password ){
 	 			auth.$createUser(email, password)
 	 				.then(function(){
-	 					login.loading = true;
+	 					login.loading  = false;
 	 					$location.path('/home');
 	 					console.log('user creation success');
 	 				}, function(error){

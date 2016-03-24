@@ -8,11 +8,21 @@ angular.module('myApp.welcome', ['ngRoute'])
 		controller: 'welcomeCtrl'
 	});
 }])
-.controller('welcomeCtrl', ['$scope','CommonProp', '$firebase', function($scope, $CommonProp, $firebase){
-	$scope.username = $CommonProp.getUser();
+.controller('welcomeCtrl', ['$scope','CommonProp', '$firebase','$location', function($scope, CommonProp, $firebase, $location){
+	$scope.username = CommonProp.getUser();
+
+	if(!$scope.username){
+        $location.path('/home');
+    }
+
 	var firebaseObj = new Firebase("https://angulrseed.firebaseIO.com/Articles");
 	var sync = $firebase(firebaseObj.startAt($scope.username).endAt($scope.username));
+
 	$scope.articles = sync.$asArray();
+	 
+	$scope.logout = function(){
+		CommonProp.logoutUser();
+	}
 
 	$scope.editPost = function(id) {
 		var firebaseObj = new Firebase("https://angulrseed.firebaseIO.com/Articles/" + id);
@@ -22,7 +32,7 @@ angular.module('myApp.welcome', ['ngRoute'])
 	}
 
 	$scope.update = function() {
-	    var fb = new Firebase("https://angulrseed.firebaseIO.com/Articles/" + $scope.postToUpdate.$id);
+	    var fb = new Firebase("https://angulrseed.firebaseIO.com/Articles/"+$scope.postToUpdate.$id);
 	    var article = $firebase(fb);
 	    article.$update({
 	        title: $scope.postToUpdate.title,
@@ -50,5 +60,7 @@ angular.module('myApp.welcome', ['ngRoute'])
             console.log("Error:", error);
         });
     }
+    
+
 
 }]);
