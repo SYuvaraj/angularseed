@@ -16,6 +16,7 @@ angular.module('myApp.home', ['ngRoute','firebase'])
  	var loginObj = $firebaseAuth(firebaseObj);
  	$scope.SignIn = function(e) {
  		e.preventDefault();
+ 		
  		var username = $scope.user.email;
  		var password = $scope.user.password;
  		loginObj.$authWithPassword({
@@ -26,12 +27,16 @@ angular.module('myApp.home', ['ngRoute','firebase'])
  			//success callback
  			console.log('Auth success');
  			$location.path('/welcome');
+ 			login.loading = true;
  			CommonProp.setUser(user.password.email);
  		}, function(error){
+ 			login.loading = false;
  			console.log('Auth fail');
  		});
 
  	}
+ 	var login = {};
+	$scope.login = login;
  	
 
 }])
@@ -46,4 +51,23 @@ angular.module('myApp.home', ['ngRoute','firebase'])
 			user = value;
 		}
 	};
-});
+})
+.directive('laddaLoading', [
+    function() {
+        return {
+            link: function(scope, element, attrs) {
+                var Ladda = window.Ladda;
+                var ladda = Ladda.create(element[0]);
+                // Watching login.loading for change
+                scope.$watch(attrs.laddaLoading, function(newVal, oldVal) {
+                    // Based on the value start and stop the indicator
+                    if (newVal) {
+                        ladda.start();
+                    } else {
+                        ladda.stop();
+                    }
+                });
+            }
+        };
+    }
+]);

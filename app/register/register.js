@@ -14,6 +14,9 @@ angular.module('myApp.register', ['ngRoute','firebase'])
 .controller('RegisterCtrl', [ '$scope', '$location', '$firebaseAuth', function($scope, $location, $firebaseAuth) {
 	var firebaseObj = new Firebase("https://angulrseed.firebaseIO.com");
 	var auth = $firebaseAuth(firebaseObj);
+	var login={};
+	$scope.login=login;
+
 	 $scope.signUp = function(){
 	 	if ( !$scope.regForm.$invalid ){
 	 		console.log("Valid forms submission");
@@ -22,9 +25,11 @@ angular.module('myApp.register', ['ngRoute','firebase'])
 	 		if ( email && password ){
 	 			auth.$createUser(email, password)
 	 				.then(function(){
+	 					login.loading = true;
 	 					$location.path('/home');
 	 					console.log('user creation success');
 	 				}, function(error){
+	 					login.loading  = false;
 						console.log('user creation fail');
 						$scope.regError = true;
 						$scope.regErrorMessage = error.message;
